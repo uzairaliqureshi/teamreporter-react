@@ -32,7 +32,7 @@ const SignIn = () => {
                 rules={[
                     {
                         required: true,
-                        message: 'Please input your Password!',
+                        message: 'Input your Password!',
                     },
                 ]}
             >
