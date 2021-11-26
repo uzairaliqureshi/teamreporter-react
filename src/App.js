@@ -1,8 +1,12 @@
+import { Route, Routes } from "react-router";
 import SignIn from "./components/SignIn";
 
 const App = () => {
     return (
-        <SignIn />
+        
+        <Routes>
+            <Route path='/' element={<SignIn />}/>
+        </Routes>
     );
 };
 
