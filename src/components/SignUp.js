@@ -2,7 +2,7 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
-const SignIn = () => {
+const SignUp = () => {
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
     };
@@ -54,12 +54,12 @@ const SignIn = () => {
 
             <Form.Item>
                 <Button type="primary" htmlType="submit" className="login-form-button">
-                    Sign In
+                    Sign Up
                 </Button>
-                Or <Link to='signUp'>SignUp</Link>
+                Or <Link to='/'>SignIn</Link>
             </Form.Item>
         </Form>
     );
 };
 
-export default SignIn;
+export default SignUp;
