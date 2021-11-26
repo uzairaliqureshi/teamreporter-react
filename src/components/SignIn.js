@@ -6,7 +6,7 @@ const SignIn = () => {
     };
 
     const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+       
     };
 
     return (
@@ -23,6 +23,7 @@ const SignIn = () => {
                 label="Username"
                 name="username"
                 rules={[{ required: true, message: 'Please input your username!' }]}
+
             >
                 <Input />
             </Form.Item>
