@@ -1,4 +1,4 @@
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox, Modal } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { signOut, onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
@@ -10,6 +10,8 @@ import "./LoginSignUp.scss";
 const SignIn = () => {
     const navigate = useNavigate();
     const [curUser, setCurUser] = useState();
+    const [modal, setModal] = useState(false);
+    const [modalMes, setModalMes] = useState("");
 
     onAuthStateChanged(auth, (currentUser) => setCurUser(currentUser));
 
@@ -18,7 +20,8 @@ const SignIn = () => {
             const user = await signInWithEmailAndPassword(auth, username, password);
             navigate('home');
         } catch (error) {
-            console.log(error.message);
+            setModalMes(error.message);
+            setModal(true);
         }
     };
 
@@ -26,6 +29,9 @@ const SignIn = () => {
 
     return (
         <>
+            <Modal title="Basic Modal" visible={modal} onOk={() => setModal(false)} onCancel={() => setModal(false)}>
+                {modalMes}
+            </Modal>
             <button onClick={logOut}>{curUser?.email}</button>
             <Form
                 name="normal_login"
