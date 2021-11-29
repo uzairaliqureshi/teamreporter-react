@@ -2,9 +2,10 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { signOut, onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
-import { auth } from '../firbase-config';
+import { auth } from '../TeamPage/firbase-config';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import "./LoginSignUp.scss";
 
 const SignIn = () => {
     const navigate = useNavigate();

@@ -3,7 +3,8 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { createUserWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth';
-import { auth } from '../firbase-config';
+import { auth } from '../TeamPage/firbase-config';
+import "./LoginSignUp.scss";
 
 const SignUp = () => {
     // const [curUser, setCurUser] = useState();
