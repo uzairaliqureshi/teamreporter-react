@@ -1,16 +1,27 @@
 import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { createUserWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth';
+import { auth } from '../firbase-config';
 
 const SignUp = () => {
-    const onFinish = (values) => {
-        console.log('Received values of form: ', values);
+    // const [curUser, setCurUser] = useState();
+    // onAuthStateChanged(auth, (currentUser) => console.log(currentUser.email));
+
+    const onFinish = async ({ password, username }) => {
+        try {
+            const user = await createUserWithEmailAndPassword(auth, username, password);
+            console.log(user);
+        } catch (error) {
+            console.log(error.message);
+        }
     };
 
     return (
         <Form
             name="normal_login"
-            className="login-form"
+            className="login-form form"
             initialValues={{
                 remember: true,
             }}
