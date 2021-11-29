@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import { signOut, onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
 import { auth } from '../firbase-config';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 const SignIn = () => {
+    const navigate = useNavigate();
     const [curUser, setCurUser] = useState();
 
     onAuthStateChanged(auth, (currentUser) => setCurUser(currentUser));
@@ -13,6 +15,7 @@ const SignIn = () => {
     const onFinish = async ({ password, username }) => {
         try {
             const user = await signInWithEmailAndPassword(auth, username, password);
+            navigate('home');
         } catch (error) {
             console.log(error.message);
         }
