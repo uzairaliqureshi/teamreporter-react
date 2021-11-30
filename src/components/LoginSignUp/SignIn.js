@@ -2,16 +2,18 @@ import { Form, Input, Button, Checkbox, Modal } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { signOut, onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
-import { auth } from '../TeamPage/firbase-config';
+import { auth } from '../../firebase/firebase-config';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import "./LoginSignUp.scss";
+import { useDispatch, useSelector } from 'react-redux';
+import { modalMessage, hideModal, showModal } from '../../Redux/modalSlice';
 
 const SignIn = () => {
     const navigate = useNavigate();
     const [curUser, setCurUser] = useState();
-    const [modal, setModal] = useState(false);
-    const [modalMes, setModalMes] = useState("");
+    const dispatch = useDispatch();
+    const { message, boolean } = useSelector(state => state.modal);
 
     onAuthStateChanged(auth, (currentUser) => setCurUser(currentUser));
 
@@ -20,8 +22,8 @@ const SignIn = () => {
             const user = await signInWithEmailAndPassword(auth, username, password);
             navigate('home');
         } catch (error) {
-            setModalMes(error.message);
-            setModal(true);
+            dispatch(modalMessage(error.message));
+            dispatch(showModal());
         }
     };
 
@@ -29,10 +31,11 @@ const SignIn = () => {
 
     return (
         <>
-            <Modal title="Basic Modal" visible={modal} onOk={() => setModal(false)} onCancel={() => setModal(false)}>
-                {modalMes}
+            <Modal title="Error" visible={boolean} onOk={() => dispatch(hideModal())}
+                onCancel={() => dispatch(hideModal())}>
+                {message}
             </Modal>
-            <button onClick={logOut}>{curUser?.email}</button>
+            {/* <button onClick={logOut}>{curUser?.email}</button> */}
             <Form
                 name="normal_login"
                 className="login-form form"
@@ -68,19 +71,14 @@ const SignIn = () => {
                     />
                 </Form.Item>
                 <Form.Item>
-                    <Form.Item name="remember" valuePropName="checked" noStyle>
-                        <Checkbox>Remember me</Checkbox>
-                    </Form.Item>
-                    <a className="login-form-forgot" href="">
-                        Forgot password
-                    </a>
-                </Form.Item>
-
-                <Form.Item>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
+                    <Button style={{ marginRight: "2vw" }} type="primary" htmlType="submit" className="login-form-button">
                         Sign In
                     </Button>
-                    Or <Link to='signUp'>SignUp</Link>
+                    <Link to='signUp'>
+                        <Button htmlType="submit" className="login-form-button">
+                            Sign Up
+                        </Button>
+                    </Link>
                 </Form.Item>
             </Form>
         </>
