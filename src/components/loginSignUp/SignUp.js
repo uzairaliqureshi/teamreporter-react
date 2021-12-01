@@ -1,41 +1,35 @@
-import { Form, Input, Button, Checkbox, Modal } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { signOut, onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
+import { createUserWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth';
 import { auth } from '../../firebase/firebase-config';
-import { useState } from 'react';
+import "./loginSignUp.scss";
+import { modalError, welcomeModal } from '../../utilities';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { setCurUser } from '../../redux/curUserSlice';
 import { useNavigate } from 'react-router';
-import "./LoginSignUp.scss";
-import { useDispatch, useSelector } from 'react-redux';
-import { modalMessage, hideModal, showModal } from '../../Redux/modalSlice';
 
-const SignIn = () => {
+const SignUp = () => {
     const navigate = useNavigate();
-    const [curUser, setCurUser] = useState();
+    const { user } = useSelector(state => state.curUser);
     const dispatch = useDispatch();
-    const { message, boolean } = useSelector(state => state.modal);
 
-    onAuthStateChanged(auth, (currentUser) => setCurUser(currentUser));
+    onAuthStateChanged(auth, (currentUser) => dispatch(setCurUser(currentUser?.email)));
 
-    const onFinish = async ({ password, username }) => {
+    const onFinish = async ({ password, Email }) => {
         try {
-            const user = await signInWithEmailAndPassword(auth, username, password);
+            await createUserWithEmailAndPassword(auth, Email, password);
             navigate('home');
+            welcomeModal(user);
         } catch (error) {
-            dispatch(modalMessage(error.message));
-            dispatch(showModal());
+            modalError(error.message);
         }
     };
 
-    const logOut = async () => await signOut(auth);
 
     return (
         <>
-            <Modal title="Error" visible={boolean} onOk={() => dispatch(hideModal())}
-                onCancel={() => dispatch(hideModal())}>
-                {message}
-            </Modal>
-            {/* <button onClick={logOut}>{curUser?.email}</button> */}
             <Form
                 name="normal_login"
                 className="login-form form"
@@ -45,22 +39,22 @@ const SignIn = () => {
                 onFinish={onFinish}
             >
                 <Form.Item
-                    name="username"
+                    name="Email"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your Username!',
+                            message: 'Please input your Email!',
                         },
                     ]}
                 >
-                    <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+                    <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
                 </Form.Item>
                 <Form.Item
                     name="password"
                     rules={[
                         {
                             required: true,
-                            message: 'Please Input your Password!',
+                            message: 'Please input your Password!',
                         },
                     ]}
                 >
@@ -72,11 +66,11 @@ const SignIn = () => {
                 </Form.Item>
                 <Form.Item>
                     <Button style={{ marginRight: "2vw" }} type="primary" htmlType="submit" className="login-form-button">
-                        Sign In
+                        Sign Up
                     </Button>
-                    <Link to='signUp'>
+                    <Link to='/'>
                         <Button htmlType="submit" className="login-form-button">
-                            Sign Up
+                            Sign In
                         </Button>
                     </Link>
                 </Form.Item>
@@ -85,4 +79,4 @@ const SignIn = () => {
     );
 };
 
-export default SignIn;
+export default SignUp;

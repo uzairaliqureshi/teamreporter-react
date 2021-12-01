@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import modalReducer from "./modalSlice";
+import currentUser from "./curUserSlice";
 
 export default configureStore({
     reducer: {
-        modal: modalReducer
+        curUser: currentUser
     }
 });

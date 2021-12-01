@@ -1,36 +1,34 @@
-import { Form, Input, Button, Checkbox, Modal } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { createUserWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth';
+import { signInWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth';
 import { auth } from '../../firebase/firebase-config';
-import "./LoginSignUp.scss";
-import { useDispatch, useSelector } from 'react-redux';
-import { hideModal, modalMessage, showModal } from '../../Redux/modalSlice';
+import { useNavigate } from 'react-router';
+import "./loginSignUp.scss";
+import { modalError } from '../../utilities';
+import { useDispatch } from 'react-redux';
+import { setCurUser } from '../../redux/curUserSlice';
 
-const SignUp = () => {
-    // const [curUser, setCurUser] = useState();
-    // onAuthStateChanged(auth, (currentUser) => console.log(currentUser.email));
+const SignIn = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { message, boolean } = useSelector(state => state.modal);
+
+    onAuthStateChanged(auth, (currentUser) => dispatch(setCurUser(currentUser?.email)));
 
     const onFinish = async ({ password, username }) => {
         try {
-            const user = await createUserWithEmailAndPassword(auth, username, password);
-            console.log(user);
+            await signInWithEmailAndPassword(auth, username, password);
+            navigate('home');
         } catch (error) {
-            dispatch(modalMessage(error.message));
-            dispatch(showModal());
+            modalError(error.message);
         }
     };
 
     return (
         <>
-            <Modal title="Error" visible={boolean} onOk={() => dispatch(hideModal())}
-                onCancel={() => dispatch(hideModal())}>
-                {message}
-            </Modal>
+
             <Form
+                preserve={false}
                 name="normal_login"
                 className="login-form form"
                 initialValues={{
@@ -39,22 +37,22 @@ const SignUp = () => {
                 onFinish={onFinish}
             >
                 <Form.Item
-                    name="Email"
+                    name="username"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your Email!',
+                            message: 'Please input your Username!',
                         },
                     ]}
                 >
-                    <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
+                    <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
                 </Form.Item>
                 <Form.Item
                     name="password"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your Password!',
+                            message: 'Please Input your Password!',
                         },
                     ]}
                 >
@@ -66,11 +64,11 @@ const SignUp = () => {
                 </Form.Item>
                 <Form.Item>
                     <Button style={{ marginRight: "2vw" }} type="primary" htmlType="submit" className="login-form-button">
-                        Sign Up
+                        Sign In
                     </Button>
-                    <Link to='/'>
+                    <Link to='signUp'>
                         <Button htmlType="submit" className="login-form-button">
-                            Sign In
+                            Sign Up
                         </Button>
                     </Link>
                 </Form.Item>
@@ -79,4 +77,4 @@ const SignUp = () => {
     );
 };
 
-export default SignUp;
+export default SignIn;

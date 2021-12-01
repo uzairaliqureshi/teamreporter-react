@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router";
-import SignIn from "./components/LoginSignUp/SignIn";
-import SignUp from "./components/LoginSignUp/SignUp";
-import TeamPage from "./components/TeamPage/TeamPage";
+import SignIn from "./components/loginSignUp/SignIn";
+import SignUp from "./components/loginSignUp/SignUp";
+import TeamPage from "./components/teamPage/TeamPage";
 
 const App = () => {
     return (
